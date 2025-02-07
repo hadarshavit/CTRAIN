@@ -1,6 +1,6 @@
 # CTRAIN
 
-CTRAIN is a unified, modular and comprehensive package for training and evaluating certified training techniques for neural networks.
+CTRAIN is a unified, modular and comprehensive package for certifiably training neural networks and evaluating their robustness.
 
 ## Overview
 
