@@ -1,0 +1,61 @@
+site_name: CTRAIN Documentation
+nav:
+  - Home: index.md
+  - Examples:
+    - Certified Training: examples/certified_training.ipynb
+    - Model Evaluation: examples/model_evaluation.ipynb
+    - Hyperparameter Optimisation: examples/hyperparameter_optimisation.ipynb
+  - API Reference:
+      - Overview: api/ctrain.md
+      - attacks:
+        - pgd: api/attacks/pgd.md
+      - bound:
+        - ibp: api/bound/ibp.md
+        - crown: api/bound/crown.md
+        - sabr: api/bound/sabr.md
+        - taps: api/bound/taps.md
+      - complete_verification:
+        - abCROWN: api/complete_verification/abCROWN.md
+      - data_loaders: api/data_loaders/data_loaders.md
+      - eval: api/eval/eval.md
+      - model_definitions: api/model_definitions/model_definitions.md
+      - model_wrappers:
+        - CROWN IBP: api/model_wrappers/crown_ibp_model_wrapper.md
+        - MTL IBP: api/model_wrappers/mtl_ibp_model_wrapper.md
+        - SABR: api/model_wrappers/sabr_model_wrapper.md
+        - SHI IBP: api/model_wrappers/shi_ibp_model_wrapper.md
+        - TAPS: api/model_wrappers/taps_model_wrapper.md
+        - STAPS: api/model_wrappers/staps_model_wrapper.md
+        - CTRAIN: api/model_wrappers/ctrain_wrapper.md
+      - train:
+        - certified:
+          - IBP: api/train/certified/ibp.md
+          - CROWN IBP: api/train/certified/crown_ibp.md
+          - SABR: api/train/certified/sabr.md
+          - TAPS: api/train/certified/taps.md
+          - STAPS: api/train/certified/staps.md
+          - MTL-IBP: api/train/certified/mtl_ibp.md
+          - util: api/train/certified/util.md
+          - eps_scheduler: api/train/certified/eps_scheduler.md
+          - initialisation:
+            - shi: api/train/certified/initialisation/shi.md
+          - regularisers:
+            - shi: api/train/certified/regularisers/shi.md
+            - l1: api/train/certified/regularisers/l1.md
+          - losses:
+            - convex_combinations: api/train/certified/losses/convex_combinations.md
+            - crown_ibp: api/train/certified/losses/crown_ibp.md
+            - ibp: api/train/certified/losses/ibp.md
+            - sabr: api/train/certified/losses/sabr.md
+            - taps: api/train/certified/losses/taps.md
+            - util: api/train/certified/losses/util.md
+      - util: api/util/util.md
+
+
+theme:
+  name: material
+plugins:
+  - search
+  - mkdocstrings
+  - mkdocs-jupyter:
+      include_source: true

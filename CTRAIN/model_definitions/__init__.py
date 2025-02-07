@@ -1,0 +1,2 @@
+from CTRAIN.model_definitions.models_shi import CNN7_Shi
+from CTRAIN.model_definitions.models_gowal import GowalConvSmall,GowalConvMed,GowalConvLarge
