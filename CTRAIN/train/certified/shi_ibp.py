@@ -16,7 +16,8 @@ from CTRAIN.train.certified.regularisers import get_l1_reg
 
 def shi_train_model(original_model, hardened_model, train_loader, val_loader=None, num_epochs=None, eps=0.3, eps_std=0.3, eps_schedule=(0, 20, 50), eps_schedule_unit='epoch', eps_scheduler_args=dict(), optimizer=None,
                     lr_decay_schedule=(15, 25), lr_decay_factor=.2, lr_decay_schedule_unit='epoch', 
-                    n_classes=10, gradient_clip=None, l1_regularisation_weight=0.00001, shi_regularisation_weight=1, shi_reg_decay=True, results_path="./results", device='cuda'):
+                    n_classes=10, gradient_clip=None, l1_regularisation_weight=0.00001, shi_regularisation_weight=1, shi_reg_decay=True, 
+                    multi_fidelity_train_eps=None, results_path="./results", device='cuda'):
 
     
     """
@@ -72,7 +73,9 @@ def shi_train_model(original_model, hardened_model, train_loader, val_loader=Non
 
     # Training loop
     for epoch in range(num_epochs):
-        
+        if multi_fidelity_train_eps is not None and multi_fidelity_train_eps < 1.0 and torch.all(multi_fidelity_train_eps * eps_scheduler.get_max_eps() <= eps_scheduler.get_cur_eps()):
+            break
+
         epoch_rob_err = 0
         epoch_nat_err = 0
         

@@ -70,7 +70,7 @@ class MTLIBPModelWrapper(CTRAINWrapper):
         self.pgd_eps_factor = pgd_eps_factor
         self.mtl_ibp_alpha = mtl_ibp_alpha
         
-    def train_model(self, train_loader, val_loader=None):
+    def train_model(self, train_loader, val_loader=None, multi_fidelity_train_eps=None):
         """
         Trains the model using the MTL-IBP method.
 
@@ -83,6 +83,7 @@ class MTLIBPModelWrapper(CTRAINWrapper):
         """
         eps_std = self.train_eps / train_loader.std if train_loader.normalised else torch.tensor(self.train_eps)
         eps_std = torch.reshape(eps_std, (*eps_std.shape, 1, 1))
+
         trained_model = mtl_ibp_train_model(
             original_model=self.original_model,
             hardened_model=self.bounded_model,
@@ -108,6 +109,7 @@ class MTLIBPModelWrapper(CTRAINWrapper):
             pgd_early_stopping=self.pgd_early_stopping,
             pgd_decay_factor=self.pgd_alpha_decay_factor,
             pgd_decay_checkpoints=self.pgd_decay_milestones,
+            multi_fidelity_train_eps=multi_fidelity_train_eps,
             results_path=self.checkpoint_path,
             device=self.device
         )

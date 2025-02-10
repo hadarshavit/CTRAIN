@@ -57,7 +57,7 @@ class ShiIBPModelWrapper(CTRAINWrapper):
         self.end_kappa = end_kappa
         self.optimizer_func = optimizer_func
         
-    def train_model(self, train_loader, val_loader=None):
+    def train_model(self, train_loader, val_loader=None, multi_fidelity_train_eps=None):
         """
         Trains the model using the SHI-IBP method.
 
@@ -88,6 +88,7 @@ class ShiIBPModelWrapper(CTRAINWrapper):
             l1_regularisation_weight=self.l1_reg_weight,
             shi_regularisation_weight=self.shi_reg_weight,
             shi_reg_decay=self.shi_reg_decay,
+            multi_fidelity_train_eps=multi_fidelity_train_eps,
             results_path=self.checkpoint_path,
             device=self.device
         )
