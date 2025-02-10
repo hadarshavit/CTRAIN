@@ -32,7 +32,7 @@ setup(
         "torchvision>=0.12.0,<0.19.0",
         "numpy>=1.20,<2",
         "tqdm>=4.64",
-        "ConfigSpace==0.7.1",
+        # "ConfigSpace==0.7.1",
         "smac>=2",
         "pandas>=2",
         "matplotlib>=3",
