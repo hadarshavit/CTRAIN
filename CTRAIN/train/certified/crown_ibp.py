@@ -12,7 +12,7 @@ from CTRAIN.util import save_checkpoint
 from CTRAIN.train.certified.regularisers import get_l1_reg, get_shi_regulariser
 from CTRAIN.train.certified.initialisation import ibp_init_shi
 
-def crown_ibp_train_model(original_model, hardened_model, train_loader, val_loader=None, num_epochs=None, eps=0.3, eps_std=0.3, eps_schedule=(0, 20, 50), eps_schedule_unit='epoch', eps_scheduler_args=dict(), optimizer=None,
+def crown_ibp_train_model(original_model, hardened_model, train_loader, val_loader=None, start_epoch=0, num_epochs=None, eps=0.3, eps_std=0.3, eps_schedule=(0, 20, 50), eps_schedule_unit='epoch', eps_scheduler_args=dict(), optimizer=None,
                             lr_decay_schedule=(15, 25), lr_decay_factor=.2, lr_decay_schedule_unit='epoch', 
                         n_classes=10, gradient_clip=None, l1_regularisation_weight=0.00001, shi_regularisation_weight=1, shi_reg_decay=1, 
                         multi_fidelity_train_eps=None, results_path="./results", device='cuda'):
@@ -60,16 +60,18 @@ def crown_ibp_train_model(original_model, hardened_model, train_loader, val_load
         eps_schedule_unit=eps_schedule_unit,
         eps_schedule=eps_schedule,
         batches_per_epoch=len(train_loader),
+        start_epoch=start_epoch, 
         **eps_scheduler_args
     )
     
-    # Not done in original paper - however it is SotA and generally beneficial
-    ibp_init_shi(original_model, hardened_model)
+    if start_epoch == 0:
+        # Not done in original paper - however it is SotA and generally beneficial
+        ibp_init_shi(original_model, hardened_model)
 
     
     cur_eps, kappa = eps_scheduler.get_cur_eps(), eps_scheduler.get_cur_kappa()
 
-    for epoch in range(num_epochs):
+    for epoch in range(start_epoch, num_epochs):
         if multi_fidelity_train_eps is not None and multi_fidelity_train_eps < 1.0 and torch.all(multi_fidelity_train_eps * eps_scheduler.get_max_eps() <= eps_scheduler.get_cur_eps()):
             break
 

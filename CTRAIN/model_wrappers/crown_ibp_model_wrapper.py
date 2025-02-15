@@ -61,7 +61,7 @@ class CrownIBPModelWrapper(CTRAINWrapper):
         self.end_beta = end_beta
         self.optimizer_func = optimizer_func
         
-    def train_model(self, train_loader, val_loader=None, multi_fidelity_train_eps=None):
+    def train_model(self, train_loader, val_loader=None, start_epoch=0, multi_fidelity_train_eps=None):
         """
         Trains the model using the CROWN-IBP method.
 
@@ -79,6 +79,7 @@ class CrownIBPModelWrapper(CTRAINWrapper):
             hardened_model=self.bounded_model,
             train_loader=train_loader,
             val_loader=val_loader,
+            start_epoch=start_epoch,
             num_epochs=self.num_epochs,
             eps=self.train_eps,
             eps_std=eps_std,
