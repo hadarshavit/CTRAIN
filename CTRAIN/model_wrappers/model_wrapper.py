@@ -195,7 +195,7 @@ class CTRAINWrapper(nn.Module):
         return self.bounded_model.parameters(recurse=recurse)
     # TODO: Add onnx export/loading
 
-    def resume_from_checkpoint(self, checkpoint_path:str, train_loader, val_loader=None, multi_fidelity_train_eps=None):
+    def resume_from_checkpoint(self, checkpoint_path:str, train_loader, val_loader=None, multi_fidelity_train_eps=None, end_epoch=None):
         """
         Resume training from a given checkpoint.
 
@@ -213,7 +213,7 @@ class CTRAINWrapper(nn.Module):
         self.epoch = checkpoint['epoch']
         optimizer_state_dict = checkpoint['optimizer_state_dict']
         self.optimizer.load_state_dict(optimizer_state_dict)
-        self.train_model(train_loader, val_loader, start_epoch=self.epoch - 1, multi_fidelity_train_eps=multi_fidelity_train_eps)
+        self.train_model(train_loader, val_loader, start_epoch=self.epoch - 1, end_epoch=end_epoch, multi_fidelity_train_eps=multi_fidelity_train_eps)
 
     
     

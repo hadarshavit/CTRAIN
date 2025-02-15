@@ -69,7 +69,7 @@ class SABRModelWrapper(CTRAINWrapper):
         self.pgd_alpha_decay_factor = pgd_alpha_decay_factor
         self.pgd_decay_milestones = pgd_decay_milestones
         
-    def train_model(self, train_loader, val_loader=None, start_epoch=0, multi_fidelity_train_eps=None):
+    def train_model(self, train_loader, val_loader=None, start_epoch=0, end_epoch=None, multi_fidelity_train_eps=None):
         """
         Trains the model using the SABR method.
 
@@ -88,6 +88,7 @@ class SABRModelWrapper(CTRAINWrapper):
             train_loader=train_loader,
             val_loader=val_loader,
             start_epoch=start_epoch,
+            end_epoch=end_epoch,
             num_epochs=self.num_epochs,
             eps=self.train_eps,
             eps_std=eps_std,
