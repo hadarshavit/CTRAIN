@@ -16,12 +16,39 @@ from CTRAIN.util import save_checkpoint
 from CTRAIN.train.certified.regularisers import get_l1_reg
 
 
-def sabr_train_model(original_model, hardened_model, train_loader, val_loader=None, start_epoch=0, num_epochs=None, eps=0.3, eps_std=0.3, eps_schedule=(0, 20, 50), eps_schedule_unit='epoch', eps_scheduler_args=dict(), optimizer=None,
-                    subselection_ratio=.4, lr_decay_schedule=(15, 25), lr_decay_factor=.2, lr_decay_schedule_unit='epoch', 
-                    n_classes=10, gradient_clip=None, l1_regularisation_weight=0.00001, shi_regularisation_weight=1, shi_reg_decay=True,
-                    pgd_steps=8, pgd_step_size=.5, pgd_restarts=1, pgd_early_stopping=True, pgd_decay_factor=.1, pgd_decay_checkpoints=(4,7), 
-                    results_path="./results", device='cuda'):
-    
+def sabr_train_model(
+    original_model,
+    hardened_model,
+    train_loader,
+    val_loader=None,
+    start_epoch=0,
+    end_epoch=None,
+    num_epochs=None,
+    eps=0.3,
+    eps_std=0.3,
+    eps_schedule=(0, 20, 50),
+    eps_schedule_unit="epoch",
+    eps_scheduler_args=dict(),
+    optimizer=None,
+    subselection_ratio=0.4,
+    lr_decay_schedule=(15, 25),
+    lr_decay_factor=0.2,
+    lr_decay_schedule_unit="epoch",
+    n_classes=10,
+    gradient_clip=None,
+    l1_regularisation_weight=0.00001,
+    shi_regularisation_weight=1,
+    shi_reg_decay=True,
+    pgd_steps=8,
+    pgd_step_size=0.5,
+    pgd_restarts=1,
+    pgd_early_stopping=True,
+    pgd_decay_factor=0.1,
+    pgd_decay_checkpoints=(4, 7),
+    results_path="./results",
+    checkpoint_save_interval=10,
+    device="cuda",
+):
     """
     Trains a model using the SABR method.
     
@@ -59,8 +86,11 @@ def sabr_train_model(original_model, hardened_model, train_loader, val_loader=No
     Returns:
         (auto_LiRPA.BoundedModule): The trained hardened model.
     """
-    
-    criterion = nn.CrossEntropyLoss(reduction='none')
+
+    if end_epoch is None:
+        end_epoch = num_epochs
+
+    criterion = nn.CrossEntropyLoss(reduction="none")
 
     if start_epoch == 0:
         # Important Change to Vanilla IBP: Initialise Weights to normal distribution with sigma_i = sqrt(2*pi)/n_i, for layer i and fan in n_i
@@ -84,7 +114,7 @@ def sabr_train_model(original_model, hardened_model, train_loader, val_loader=No
 
     cur_eps = eps_scheduler.get_cur_eps()
     # Training loop
-    for epoch in range(start_epoch, num_epochs):
+    for epoch in range(start_epoch, end_epoch):
 
         epoch_adv_err = 0
         epoch_rob_err = 0

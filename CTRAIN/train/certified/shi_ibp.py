@@ -14,12 +14,33 @@ from CTRAIN.train.certified.regularisers import get_shi_regulariser
 from CTRAIN.util import save_checkpoint
 from CTRAIN.train.certified.regularisers import get_l1_reg
 
-def shi_train_model(original_model, hardened_model, train_loader, val_loader=None, start_epoch=0, num_epochs=None, eps=0.3, eps_std=0.3, eps_schedule=(0, 20, 50), eps_schedule_unit='epoch', eps_scheduler_args=dict(), optimizer=None,
-                    lr_decay_schedule=(15, 25), lr_decay_factor=.2, lr_decay_schedule_unit='epoch', 
-                    n_classes=10, gradient_clip=None, l1_regularisation_weight=0.00001, shi_regularisation_weight=1, shi_reg_decay=True, 
-                    results_path="./results", device='cuda'):
 
-    
+def shi_train_model(
+    original_model,
+    hardened_model,
+    train_loader,
+    val_loader=None,
+    start_epoch=0,
+    end_epoch=None,
+    num_epochs=None,
+    eps=0.3,
+    eps_std=0.3,
+    eps_schedule=(0, 20, 50),
+    eps_schedule_unit="epoch",
+    eps_scheduler_args=dict(),
+    optimizer=None,
+    lr_decay_schedule=(15, 25),
+    lr_decay_factor=0.2,
+    lr_decay_schedule_unit="epoch",
+    n_classes=10,
+    gradient_clip=None,
+    l1_regularisation_weight=0.00001,
+    shi_regularisation_weight=1,
+    shi_reg_decay=True,
+    results_path="./results",
+    checkpoint_save_interval=10,
+    device="cuda",
+):
     """
     Train a model using the Shi-IBP method for certified robustness.
     
@@ -50,6 +71,10 @@ def shi_train_model(original_model, hardened_model, train_loader, val_loader=Non
     Returns:
         (auto_LiRPA.BoundedModule): The trained hardened model.
     """
+
+    if end_epoch is None:
+        end_epoch = num_epochs
+
     criterion = nn.CrossEntropyLoss(reduction='none')
 
     no_batches = 0
@@ -75,7 +100,7 @@ def shi_train_model(original_model, hardened_model, train_loader, val_loader=Non
     cur_eps, kappa = eps_scheduler.get_cur_eps(), eps_scheduler.get_cur_kappa()
 
     # Training loop
-    for epoch in range(start_epoch, num_epochs):
+    for epoch in range(start_epoch, end_epoch):
 
         epoch_rob_err = 0
         epoch_nat_err = 0
