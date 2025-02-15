@@ -11,7 +11,7 @@ from CTRAIN.train.certified.regularisers import get_shi_regulariser
 from CTRAIN.util import save_checkpoint
 from CTRAIN.train.certified.regularisers import get_l1_reg
 
-def mtl_ibp_train_model(original_model, hardened_model, train_loader, val_loader=None, num_epochs=None, eps=0.3, eps_std=0.3, eps_schedule=(0, 20, 50), eps_schedule_unit='epoch', eps_scheduler_args=dict(), optimizer=None,
+def mtl_ibp_train_model(original_model, hardened_model, train_loader, val_loader=None, start_epoch=0, num_epochs=None, eps=0.3, eps_std=0.3, eps_schedule=(0, 20, 50), eps_schedule_unit='epoch', eps_scheduler_args=dict(), optimizer=None,
                         lr_decay_schedule=(15, 25), lr_decay_factor=.2, lr_decay_schedule_unit='epoch', 
                         n_classes=10, gradient_clip=None, shi_regularisation_weight=.5, shi_reg_decay=True, l1_regularisation_weight=0.00001, 
                         alpha=.5, pgd_restarts=1, pgd_step_size=10, pgd_n_steps=1, pgd_eps_factor=1, pgd_decay_factor=.1, pgd_decay_checkpoints=(), pgd_early_stopping=False, 
@@ -56,8 +56,9 @@ def mtl_ibp_train_model(original_model, hardened_model, train_loader, val_loader
     """
                         
     criterion = nn.CrossEntropyLoss(reduction='none')
-
-    ibp_init_shi(original_model, hardened_model)
+    
+    if start_epoch == 0:
+        ibp_init_shi(original_model, hardened_model)
 
     no_batches = 0
     cur_lr = optimizer.param_groups[-1]['lr']
@@ -70,12 +71,13 @@ def mtl_ibp_train_model(original_model, hardened_model, train_loader, val_loader
         eps_schedule_unit=eps_schedule_unit,
         eps_schedule=eps_schedule,
         batches_per_epoch=len(train_loader),
+        start_epoch=start_epoch,
         **eps_scheduler_args
     )
 
     cur_eps = eps_scheduler.get_cur_eps()
 
-    for epoch in range(num_epochs):
+    for epoch in range(start_epoch, num_epochs):
         if multi_fidelity_train_eps is not None and multi_fidelity_train_eps < 1.0 and torch.all(multi_fidelity_train_eps * eps_scheduler.get_max_eps() <= eps_scheduler.get_cur_eps()):
             break
         
