@@ -213,7 +213,7 @@ class CTRAINWrapper(nn.Module):
         self.epoch = checkpoint['epoch']
         optimizer_state_dict = checkpoint['optimizer_state_dict']
         self.optimizer.load_state_dict(optimizer_state_dict)
-        self.train_model(train_loader, val_loader, start_epoch=self.epoch - 1, end_epoch=end_epoch, multi_fidelity_train_eps=multi_fidelity_train_eps)
+        self.train_model(train_loader, val_loader, start_epoch=self.epoch, end_epoch=end_epoch, multi_fidelity_train_eps=multi_fidelity_train_eps)
 
     
     
