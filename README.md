@@ -1,6 +1,6 @@
 # CTRAIN
 
-CTRAIN is a unified, modular and comprehensive package for training and evaluating certified training techniques for neural networks.
+CTRAIN is a unified, modular and comprehensive package for certifiably training neural networks and evaluating their robustness.
 
 ## Overview
 
@@ -18,7 +18,7 @@ Furthermore, CTRAIN enables easy evaluation of the adversarial and certified rob
 - Adversarial Robustness
   - PGD ([Madry et al., 2018](https://arxiv.org/abs/1706.06083))
 
-- Certified Robustness (Incomplete Verification using `auto_LiRPA`, [Xu et al., 2020](https://proceedings.neurips.cc/paper/2020/file/0cbc5671ae26f67871cb914d81ef8fc1-Paper.pdf))
+- Certified Robustness (Incomplete Verification)
   - IBP ([Gowal et al., 2018](https://arxiv.org/abs/1810.12715))
   - CROWN-IBP ([Zhang et al., 2020](https://arxiv.org/abs/1906.06316))
   - CROWN ([Zhang et al., 2018](https://arxiv.org/abs/1811.00866))
@@ -28,7 +28,7 @@ Furthermore, CTRAIN enables easy evaluation of the adversarial and certified rob
 
 ## Key Features
 CTRAIN has the goal of providing an unified, comprehensive, accessible and flexible framework for certified training. Key features include:
-- Standardised, modular and hihly-configurable implementations of popular and performant certified training methods based on the popular `auto_LiRPA` library
+- Standardised, modular and highly-configurable implementations of popular and performant certified training methods based on the `auto_LiRPA` library ([Xu et al., 2020](https://proceedings.neurips.cc/paper/2020/file/0cbc5671ae26f67871cb914d81ef8fc1-Paper.pdf))
 - Unified and accessible interface through model wrappers
 - Based on PyTorch for easy integration into common machine learning pipelines
 - Seamless integration of sophisticated hyperparameter optimisation using SMAC3 ([Lindauer et al., 2022](https://www.jmlr.org/papers/volume23/21-0888/21-0888.pdf))
@@ -48,7 +48,7 @@ Or, to setup the package for development purposes, run:
 git submodule init
 git submodule update
 pip install --no-deps git+https://github.com/KaidiXu/onnx2pytorch@8447c42c3192dad383e5598edc74dddac5706ee2
-pip install --no-deps git+https://github.com/Verified-Intelligence/auto_LiRPA.git@cf0169ce6bfb4fddd82cfff5c259c162a23ad03c"
+pip install --no-deps git+https://github.com/Verified-Intelligence/auto_LiRPA.git@cf0169ce6bfb4fddd82cfff5c259c162a23ad03c
 pip install -e ".[dev]"
 ```
 Then, you can train and evaluate the standard CNN7 architecture proposed by Shi et al. on the CIFAR-10 dataset using the IBP certified training technique in 12 lines of code:

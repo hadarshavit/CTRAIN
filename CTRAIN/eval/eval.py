@@ -518,7 +518,7 @@ def eval_model(model, data_loader, eps, n_classes=10, test_samples=np.inf, metho
         n_classes (int, optional): Number of classes in the dataset. Default is 10.
         eps (float, optional): Perturbation size for adversarial and certified evaluation.
         test_samples (int or float, optional): Number of samples to test. Default is np.inf (all samples).
-        method (str, optional): Method for certified evaluation. Default is 'ADAPTIVE'.
+        method (str or list, optional): The certification method to use. Options are 'IBP', 'CROWN', 'CROWN-IBP', 'ADAPTIVE', 'COMPLETE', or a list of methods (which results in an ADAPTIVE evaluation using these methods). Default is 'IBP'.
         device (str, optional): Device to perform adversarial evaluation on. Default is 'cuda'.
         
     Returns:

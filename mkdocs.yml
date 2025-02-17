@@ -6,7 +6,6 @@ nav:
     - Model Evaluation: examples/model_evaluation.ipynb
     - Hyperparameter Optimisation: examples/hyperparameter_optimisation.ipynb
   - API Reference:
-      - Overview: api/ctrain.md
       - attacks:
         - pgd: api/attacks/pgd.md
       - bound:
