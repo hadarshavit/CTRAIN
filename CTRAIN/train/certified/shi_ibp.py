@@ -17,7 +17,7 @@ from CTRAIN.train.certified.regularisers import get_l1_reg
 def shi_train_model(original_model, hardened_model, train_loader, val_loader=None, start_epoch=0, num_epochs=None, eps=0.3, eps_std=0.3, eps_schedule=(0, 20, 50), eps_schedule_unit='epoch', eps_scheduler_args=dict(), optimizer=None,
                     lr_decay_schedule=(15, 25), lr_decay_factor=.2, lr_decay_schedule_unit='epoch', 
                     n_classes=10, gradient_clip=None, l1_regularisation_weight=0.00001, shi_regularisation_weight=1, shi_reg_decay=True, 
-                    multi_fidelity_train_eps=None, results_path="./results", device='cuda'):
+                    results_path="./results", device='cuda'):
 
     
     """
@@ -28,6 +28,7 @@ def shi_train_model(original_model, hardened_model, train_loader, val_loader=Non
         hardened_model (auto_LiRPA.BoundedModule): The bounded model to be trained.
         train_loader (torch.utils.data.DataLoader): DataLoader for the training data.
         val_loader (torch.utils.data.DataLoader, optional): DataLoader for the validation data. Defaults to None.
+        start_epoch (int, optional): Epoch to start training from. Defaults to 0.
         num_epochs (int, optional): Number of epochs to train the model. Defaults to None.
         eps (float, optional): Epsilon value for perturbation. Defaults to 0.3.
         eps_std (float, optional): Standardised epsilon value. Defaults to 0.3.
@@ -75,8 +76,6 @@ def shi_train_model(original_model, hardened_model, train_loader, val_loader=Non
 
     # Training loop
     for epoch in range(start_epoch, num_epochs):
-        if multi_fidelity_train_eps is not None and multi_fidelity_train_eps < 1.0 and torch.all(multi_fidelity_train_eps * eps_scheduler.get_max_eps() <= eps_scheduler.get_cur_eps()):
-            break
 
         epoch_rob_err = 0
         epoch_nat_err = 0

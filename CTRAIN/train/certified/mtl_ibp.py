@@ -15,7 +15,7 @@ def mtl_ibp_train_model(original_model, hardened_model, train_loader, val_loader
                         lr_decay_schedule=(15, 25), lr_decay_factor=.2, lr_decay_schedule_unit='epoch', 
                         n_classes=10, gradient_clip=None, shi_regularisation_weight=.5, shi_reg_decay=True, l1_regularisation_weight=0.00001, 
                         alpha=.5, pgd_restarts=1, pgd_step_size=10, pgd_n_steps=1, pgd_eps_factor=1, pgd_decay_factor=.1, pgd_decay_checkpoints=(), pgd_early_stopping=False, 
-                        multi_fidelity_train_eps=None, results_path="./results", device='cuda'):
+                        results_path="./results", device='cuda'):
 
     """
     Trains a model using the MTL-IBP method.
@@ -25,6 +25,7 @@ def mtl_ibp_train_model(original_model, hardened_model, train_loader, val_loader
         hardened_model (auto_LiRPA.BoundedModule): The bounded model to be trained.
         train_loader (torch.utils.data.DataLoader): DataLoader for the training data.
         val_loader (torch.utils.data.DataLoader, optional): DataLoader for the validation data. Defaults to None.
+        start_epoch (int, optional): Epoch to start training from. Defaults to 0.
         num_epochs (int, optional): Number of epochs to train the model. Defaults to None.
         eps (float, optional): Epsilon value for perturbation. Defaults to 0.3.
         eps_std (float, optional): Standardised epsilon value. Defaults to 0.3.
@@ -78,8 +79,6 @@ def mtl_ibp_train_model(original_model, hardened_model, train_loader, val_loader
     cur_eps = eps_scheduler.get_cur_eps()
 
     for epoch in range(start_epoch, num_epochs):
-        if multi_fidelity_train_eps is not None and multi_fidelity_train_eps < 1.0 and torch.all(multi_fidelity_train_eps * eps_scheduler.get_max_eps() <= eps_scheduler.get_cur_eps()):
-            break
         
         epoch_adv_err = 0
         epoch_rob_err = 0

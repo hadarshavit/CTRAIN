@@ -61,13 +61,14 @@ class CrownIBPModelWrapper(CTRAINWrapper):
         self.end_beta = end_beta
         self.optimizer_func = optimizer_func
         
-    def train_model(self, train_loader, val_loader=None, start_epoch=0, multi_fidelity_train_eps=None):
+    def train_model(self, train_loader, val_loader=None, start_epoch=0):
         """
         Trains the model using the CROWN-IBP method.
 
         Args:
             train_loader (torch.utils.data.DataLoader): DataLoader for training data.
             val_loader (torch.utils.data.DataLoader, optional): DataLoader for validation data.
+            start_epoch (int, optional): Epoch to start training from. Initialises learning rate and epsilon schedulers accordingly. Defaults to 0.
 
         Returns:
             (auto_LiRPA.BoundedModule): Trained model.
@@ -93,7 +94,6 @@ class CrownIBPModelWrapper(CTRAINWrapper):
             l1_regularisation_weight=self.l1_reg_weight,
             shi_regularisation_weight=self.shi_reg_weight,
             shi_reg_decay=self.shi_reg_decay,
-            multi_fidelity_train_eps=multi_fidelity_train_eps,
             results_path=self.checkpoint_path,
             device=self.device
         )

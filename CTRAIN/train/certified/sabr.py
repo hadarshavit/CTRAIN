@@ -20,7 +20,7 @@ def sabr_train_model(original_model, hardened_model, train_loader, val_loader=No
                     subselection_ratio=.4, lr_decay_schedule=(15, 25), lr_decay_factor=.2, lr_decay_schedule_unit='epoch', 
                     n_classes=10, gradient_clip=None, l1_regularisation_weight=0.00001, shi_regularisation_weight=1, shi_reg_decay=True,
                     pgd_steps=8, pgd_step_size=.5, pgd_restarts=1, pgd_early_stopping=True, pgd_decay_factor=.1, pgd_decay_checkpoints=(4,7), 
-                    multi_fidelity_train_eps=None, results_path="./results", device='cuda'):
+                    results_path="./results", device='cuda'):
     
     """
     Trains a model using the SABR method.
@@ -30,6 +30,7 @@ def sabr_train_model(original_model, hardened_model, train_loader, val_loader=No
         hardened_model (torch.nn.Module): The model to be trained with SABR.
         train_loader (torch.utils.data.DataLoader): DataLoader for the training data.
         val_loader (torch.utils.data.DataLoader, optional): DataLoader for the validation data. Defaults to None.
+        start_epoch (int, optional): Epoch to start training from. Defaults to 0.
         num_epochs (int, optional): Number of epochs to train the model. Defaults to None.
         eps (float, optional): Initial epsilon value for adversarial perturbations. Defaults to 0.3.
         eps_std (float, optional): Standardised epsilon value. Defaults to 0.3.
@@ -59,7 +60,6 @@ def sabr_train_model(original_model, hardened_model, train_loader, val_loader=No
         (auto_LiRPA.BoundedModule): The trained hardened model.
     """
     
-
     criterion = nn.CrossEntropyLoss(reduction='none')
 
     if start_epoch == 0:
@@ -85,8 +85,6 @@ def sabr_train_model(original_model, hardened_model, train_loader, val_loader=No
     cur_eps = eps_scheduler.get_cur_eps()
     # Training loop
     for epoch in range(start_epoch, num_epochs):
-        if multi_fidelity_train_eps is not None and multi_fidelity_train_eps < 1.0 and torch.all(multi_fidelity_train_eps * eps_scheduler.get_max_eps() <= eps_scheduler.get_cur_eps()):
-            break
 
         epoch_adv_err = 0
         epoch_rob_err = 0
@@ -199,4 +197,3 @@ def sabr_train_model(original_model, hardened_model, train_loader, val_loader=No
         
     return hardened_model
 
-            
