@@ -123,6 +123,7 @@ class CTRAINWrapper(nn.Module):
         Args:
             test_loader (DataLoader): DataLoader containing the test dataset.
             test_samples (int, optional): Number of test samples to evaluate. Defaults to np.inf.
+            eval_method (str or list, optional): The certification method to use. Options are 'IBP', 'CROWN', 'CROWN-IBP', 'ADAPTIVE', or a list of methods (which results in an ADAPTIVE evaluation using these methods). Default is 'ADAPTIVE'.
 
         Returns:
             (Tuple): Evaluation results in terms of std_acc, cert_acc and adv_acc.
