@@ -70,24 +70,27 @@ class MTLIBPModelWrapper(CTRAINWrapper):
         self.pgd_eps_factor = pgd_eps_factor
         self.mtl_ibp_alpha = mtl_ibp_alpha
         
-    def train_model(self, train_loader, val_loader=None):
+    def train_model(self, train_loader, val_loader=None, start_epoch=0):
         """
         Trains the model using the MTL-IBP method.
 
         Args:
             train_loader (torch.utils.data.DataLoader): DataLoader for training data.
             val_loader (torch.utils.data.DataLoader, optional): DataLoader for validation data.
+            start_epoch (int, optional): Epoch to start training from. Initialises learning rate and epsilon schedulers accordingly. Defaults to 0.
 
         Returns:
             (auto_LiRPA.BoundedModule): Trained model.
         """
         eps_std = self.train_eps / train_loader.std if train_loader.normalised else torch.tensor(self.train_eps)
         eps_std = torch.reshape(eps_std, (*eps_std.shape, 1, 1))
+
         trained_model = mtl_ibp_train_model(
             original_model=self.original_model,
             hardened_model=self.bounded_model,
             train_loader=train_loader,
             val_loader=val_loader,
+            start_epoch=start_epoch,
             num_epochs=self.num_epochs,
             eps=self.train_eps,
             eps_std=eps_std,

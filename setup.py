@@ -28,18 +28,6 @@ setup(
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        "torch>=2,<2.4.0",
-        "torchvision>=0.12.0,<0.19.0",
-        "numpy>=1.20,<2",
-        "tqdm>=4.64",
-        "ConfigSpace==0.7.1",
-        "smac>=2",
-        "pandas>=2",
-        "matplotlib>=3",
-        "seaborn",
-        "onnxruntime>=1",
-        "onnxoptimizer",
-        "skl2onnx"
     ],
     cmdclass={
         "install": CustomInstallCommand,
@@ -50,4 +38,3 @@ setup(
     },
     include_package_data=True,
 )
-

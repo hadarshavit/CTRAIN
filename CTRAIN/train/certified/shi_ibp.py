@@ -14,9 +14,10 @@ from CTRAIN.train.certified.regularisers import get_shi_regulariser
 from CTRAIN.util import save_checkpoint
 from CTRAIN.train.certified.regularisers import get_l1_reg
 
-def shi_train_model(original_model, hardened_model, train_loader, val_loader=None, num_epochs=None, eps=0.3, eps_std=0.3, eps_schedule=(0, 20, 50), eps_schedule_unit='epoch', eps_scheduler_args=dict(), optimizer=None,
+def shi_train_model(original_model, hardened_model, train_loader, val_loader=None, start_epoch=0, num_epochs=None, eps=0.3, eps_std=0.3, eps_schedule=(0, 20, 50), eps_schedule_unit='epoch', eps_scheduler_args=dict(), optimizer=None,
                     lr_decay_schedule=(15, 25), lr_decay_factor=.2, lr_decay_schedule_unit='epoch', 
-                    n_classes=10, gradient_clip=None, l1_regularisation_weight=0.00001, shi_regularisation_weight=1, shi_reg_decay=True, results_path="./results", device='cuda'):
+                    n_classes=10, gradient_clip=None, l1_regularisation_weight=0.00001, shi_regularisation_weight=1, shi_reg_decay=True, 
+                    results_path="./results", device='cuda'):
 
     
     """
@@ -27,6 +28,7 @@ def shi_train_model(original_model, hardened_model, train_loader, val_loader=Non
         hardened_model (auto_LiRPA.BoundedModule): The bounded model to be trained.
         train_loader (torch.utils.data.DataLoader): DataLoader for the training data.
         val_loader (torch.utils.data.DataLoader, optional): DataLoader for the validation data. Defaults to None.
+        start_epoch (int, optional): Epoch to start training from. Defaults to 0.
         num_epochs (int, optional): Number of epochs to train the model. Defaults to None.
         eps (float, optional): Epsilon value for perturbation. Defaults to 0.3.
         eps_std (float, optional): Standardised epsilon value. Defaults to 0.3.
@@ -62,17 +64,19 @@ def shi_train_model(original_model, hardened_model, train_loader, val_loader=Non
         eps_schedule_unit=eps_schedule_unit,
         eps_schedule=eps_schedule,
         batches_per_epoch=len(train_loader),
+        start_epoch=start_epoch,
         **eps_scheduler_args
     )
     
-    # Important Change to Vanilla IBP: Initialise Weights to normal distribution with sigma_i = sqrt(2*pi)/n_i, for layer i and fan in n_i
-    ibp_init_shi(original_model, hardened_model)
+    if start_epoch == 0:
+        # Important Change to Vanilla IBP: Initialise Weights to normal distribution with sigma_i = sqrt(2*pi)/n_i, for layer i and fan in n_i
+        ibp_init_shi(original_model, hardened_model)
 
     cur_eps, kappa = eps_scheduler.get_cur_eps(), eps_scheduler.get_cur_kappa()
 
     # Training loop
-    for epoch in range(num_epochs):
-        
+    for epoch in range(start_epoch, num_epochs):
+
         epoch_rob_err = 0
         epoch_nat_err = 0
         
