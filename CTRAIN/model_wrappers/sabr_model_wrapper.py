@@ -77,6 +77,7 @@ class SABRModelWrapper(CTRAINWrapper):
             train_loader (torch.utils.data.DataLoader): DataLoader for training data.
             val_loader (torch.utils.data.DataLoader, optional): DataLoader for validation data.
             start_epoch (int, optional): Epoch to start training from. Initialises learning rate and epsilon schedulers accordingly. Defaults to 0.
+            end_epoch (int, optional): Epoch to prematurely end training at. Defaults to None.
         Returns:
             (auto_LiRPA.BoundedModule): Trained model.
         """
