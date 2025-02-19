@@ -1,6 +1,21 @@
 # CHANGELOG
 
 
+## v0.2.1 (2025-02-19)
+
+### Bug Fixes
+
+- Pass gradient expansion alpha to STAPS loss calculation
+  ([`06a4ae2`](https://github.com/ADA-research/CTRAIN/commit/06a4ae295db69fd717426840f4c85b6f8d7f8c22))
+
+### Continuous Integration
+
+- Add git pull in publish workflow
+  ([`3bd02a8`](https://github.com/ADA-research/CTRAIN/commit/3bd02a8016c823802df3d7af4ba081d9681a36d4))
+
+the commit in the previous workflow step was not present during the publish phase
+
+
 ## v0.2.0 (2025-02-19)
 
 ### Features
