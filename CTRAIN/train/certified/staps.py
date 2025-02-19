@@ -270,6 +270,7 @@ def staps_train_model(
                     pgd_decay_factor=taps_pgd_decay_factor,
                     gradient_link_thresh=taps_gradient_link_thresh,
                     gradient_link_tolerance=taps_gradient_link_tolerance,
+                    gradient_expansion_alpha=gradient_expansion_alpha,
                     propagation="SABR",
                     sabr_args=sabr_args,
                     return_stats=True,
