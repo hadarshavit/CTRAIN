@@ -58,6 +58,7 @@ def sabr_train_model(
         train_loader (torch.utils.data.DataLoader): DataLoader for the training data.
         val_loader (torch.utils.data.DataLoader, optional): DataLoader for the validation data. Defaults to None.
         start_epoch (int, optional): Epoch to start training from. Defaults to 0.
+        end_epoch (int, optional): Epoch to prematurely end training at. Defaults to None.
         num_epochs (int, optional): Number of epochs to train the model. Defaults to None.
         eps (float, optional): Initial epsilon value for adversarial perturbations. Defaults to 0.3.
         eps_std (float, optional): Standardised epsilon value. Defaults to 0.3.
