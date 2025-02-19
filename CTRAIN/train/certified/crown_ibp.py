@@ -16,6 +16,7 @@ def crown_ibp_train_model(
     train_loader,
     val_loader=None,
     start_epoch=0,
+    end_epoch=None,
     num_epochs=None,
     eps=0.3,
     eps_std=0.3,
@@ -44,6 +45,7 @@ def crown_ibp_train_model(
         train_loader (torch.utils.data.DataLoader): DataLoader for the training data.
         val_loader (torch.utils.data.DataLoader, optional): DataLoader for the validation data. Defaults to None.
         start_epoch (int, optional): Epoch to start training from. Defaults to 0.
+        end_epoch (int, optional): Epoch to prematurely end training at. Defaults to None.
         num_epochs (int, optional): Number of epochs to train the model. Defaults to None.
         eps (float, optional): Epsilon value for perturbation. Defaults to 0.3.
         eps_std (float, optional): Standardised epsilon value. Defaults to 0.3.
@@ -67,8 +69,11 @@ def crown_ibp_train_model(
         (auto_LiRPA.BoundedModule): The trained hardened model.
     """
 
-    criterion = nn.CrossEntropyLoss(reduction="none")
+    if end_epoch is None:
+        end_epoch = num_epochs
 
+    criterion = nn.CrossEntropyLoss(reduction='none')
+    
     no_batches = 0
     cur_lr = optimizer.param_groups[-1]["lr"]
 
@@ -91,7 +96,7 @@ def crown_ibp_train_model(
 
     cur_eps, kappa = eps_scheduler.get_cur_eps(), eps_scheduler.get_cur_kappa()
 
-    for epoch in range(start_epoch, num_epochs):
+    for epoch in range(start_epoch, end_epoch):
 
         epoch_rob_err = 0
         epoch_nat_err = 0
@@ -216,3 +221,4 @@ def crown_ibp_train_model(
             )
 
     return hardened_model
+

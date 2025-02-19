@@ -22,6 +22,8 @@ def staps_train_model(
     hardened_model,
     train_loader,
     val_loader=None,
+    start_epoch=0,
+    end_epoch=None,
     num_epochs=None,
     eps=0.3,
     eps_std=0.3,
@@ -52,7 +54,6 @@ def staps_train_model(
     taps_pgd_decay_checkpoints=(5, 7),
     taps_gradient_link_thresh=0.5,
     taps_gradient_link_tolerance=0.00001,
-    start_epoch=0,
     results_path="./results",
     checkpoint_save_interval=10,
     device="cuda",
@@ -65,6 +66,8 @@ def staps_train_model(
         hardened_model (auto_LiRPA.BoundedModule): The bounded model to be trained.
         train_loader (torch.utils.data.DataLoader): DataLoader for the training data.
         val_loader (torch.utils.data.DataLoader, optional): DataLoader for the validation data. Defaults to None.
+        start_epoch (int, optional): Epoch to start training from. Defaults to 0.
+        end_epoch (int, optional): Epoch to prematurely end training at. Defaults to None.
         num_epochs (int, optional): Number of epochs to train the model. Defaults to None.
         eps (float, optional): Epsilon value for perturbation. Defaults to 0.3.
         eps_std (float, optional): Standardised epsilon value. Defaults to 0.3.
@@ -103,6 +106,8 @@ def staps_train_model(
     Returns:
         (autoLiRPA.BoundedModule): The trained bounded model.
     """
+    if end_epoch is None:
+        end_epoch = num_epochs
 
     criterion = nn.CrossEntropyLoss(reduction="none")
     if start_epoch == 0:
@@ -125,7 +130,7 @@ def staps_train_model(
 
     cur_eps = eps_scheduler.get_cur_eps()
 
-    for epoch in range(num_epochs):
+    for epoch in range(start_epoch, end_epoch):
 
         if start_epoch > epoch:
             continue

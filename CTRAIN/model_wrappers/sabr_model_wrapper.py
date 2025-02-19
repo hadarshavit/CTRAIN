@@ -70,7 +70,7 @@ class SABRModelWrapper(CTRAINWrapper):
         self.pgd_alpha_decay_factor = pgd_alpha_decay_factor
         self.pgd_decay_milestones = pgd_decay_milestones
         
-    def train_model(self, train_loader, val_loader=None, start_epoch=0):
+    def train_model(self, train_loader, val_loader=None, start_epoch=0, end_epoch=None):
         """
         Trains the model using the SABR method.
 
@@ -78,6 +78,8 @@ class SABRModelWrapper(CTRAINWrapper):
             train_loader (torch.utils.data.DataLoader): DataLoader for training data.
             val_loader (torch.utils.data.DataLoader, optional): DataLoader for validation data.
             start_epoch (int, optional): Epoch to start training from. Initialises learning rate and epsilon schedulers accordingly. Defaults to 0.
+            end_epoch (int, optional): Epoch to prematurely end training at. Defaults to None.
+        
         Returns:
             (auto_LiRPA.BoundedModule): Trained model.
         """
@@ -89,6 +91,7 @@ class SABRModelWrapper(CTRAINWrapper):
             train_loader=train_loader,
             val_loader=val_loader,
             start_epoch=start_epoch,
+            end_epoch=end_epoch,
             num_epochs=self.num_epochs,
             eps=self.train_eps,
             eps_std=eps_std,

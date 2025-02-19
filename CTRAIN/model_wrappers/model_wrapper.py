@@ -199,7 +199,7 @@ class CTRAINWrapper(nn.Module):
         return self.bounded_model.parameters(recurse=recurse)
     # TODO: Add onnx export/loading
 
-    def resume_from_checkpoint(self, checkpoint_path:str, train_loader, val_loader=None):
+    def resume_from_checkpoint(self, checkpoint_path:str, train_loader, val_loader=None, end_epoch=None):
         """
         Resume training from a given checkpoint.
 
@@ -207,6 +207,7 @@ class CTRAINWrapper(nn.Module):
             checkpoint_path (str): Path to the checkpoint file.
             train_loader (DataLoader): DataLoader for the training dataset.
             val_loader (DataLoader, optional): DataLoader for the validation dataset. Defaults to None.
+            end_epoch (int, optional): Epoch to prematurely end training at. Defaults to None.
 
         Loads the model and optimizer state from the checkpoint, sets the starting epoch, 
         and resumes training from that epoch.
@@ -217,9 +218,8 @@ class CTRAINWrapper(nn.Module):
         self.epoch = checkpoint['epoch']
         optimizer_state_dict = checkpoint['optimizer_state_dict']
         self.optimizer.load_state_dict(optimizer_state_dict)
-        self.train_model(train_loader, val_loader, start_epoch=self.epoch)
 
-    
+        self.train_model(train_loader, val_loader, start_epoch=self.epoch, end_epoch=end_epoch)
     
     def hpo(self, train_loader, val_loader, budget=5*24*60*60, defaults=dict(), eval_samples=1000, output_dir='./smac_hpo', include_nat_loss=True, include_adv_loss=True, include_cert_loss=True):
         """
