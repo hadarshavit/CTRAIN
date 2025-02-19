@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.2.0 (2025-02-19)
+
+### Features
+
+- Add checkpoint save interval
+  ([`379f30e`](https://github.com/ADA-research/CTRAIN/commit/379f30e18867fbf1f944df09039ee5f54f4fca4b))
+
+Users can now specify an interval of epochs after which a checkpoint is saved. Before that, the
+  checkpoints were saved every epoch which may have been undesirable due to space constraints.
+
+
 ## v0.1.3 (2025-02-17)
 
 ### Bug Fixes
